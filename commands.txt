@@ -1,0 +1,177 @@
+
+# Manual setup step by step
+
+# 1. Create project
+docker run --rm -v $(pwd):/app composer create-project laravel/laravel laravel-app
+
+# 2. Set permissions
+chmod -R 777 laravel-app/storage
+chmod -R 777 laravel-app/bootstrap/cache
+
+# 3. Setup .env
+cd laravel-app
+cp .env.example .env
+
+# 4. Start Docker
+docker compose up -d --build --no-cache
+
+# 5. Run Artisan commands
+docker compose exec app php artisan key:generate --force
+docker compose exec app php artisan storage:link
+docker compose exec app php artisan migrate --force
+
+####################
+# USEFULL COMMANDS #
+####################
+# View logs
+docker compose logs -f app
+
+# Stop containers
+docker compose down
+
+# Stop and remove volumes (clean everything)
+docker compose down -v
+
+# Restart containers
+docker compose restart
+
+# Enter the container shell
+docker compose exec app bash
+
+# Clear configuration cache
+docker compose exec app php artisan config:clear
+
+# Cache configuration
+docker compose exec app php artisan config:cache
+
+# Run tests
+docker compose exec app php artisan test
+
+# List all containers
+docker compose ps
+
+# Stop all containers
+docker compose stop
+
+# Build without cache
+docker compose build --no-cache
+
+# Remove unused containers
+docker system prune -f
+
+##################
+# ERROR HANDLING #
+##################
+# Check if containers are running
+docker compose ps
+
+# Check app logs
+docker compose logs app
+
+# Check database logs
+docker compose logs db
+
+# Restart from scratch
+docker compose down -v
+docker compose up -d --build
+
+# Remove everything and start fresh
+docker compose down -v
+docker rm -f $(docker ps -aq)
+docker volume prune -f
+docker compose up -d --build
+
+###########
+# LARAVEL #
+###########
+# install TELESCOPE
+composer require laravel/telescope --dev
+php artisan telescope:install
+php artisan migrate
+# access telescope dashboard
+php artisan serve
+access >> http://localhost:8080/telescope
+php artisan telescope:prune --hours=48
+
+# create a single config file
+php artisan config:cache
+
+# remove single config file
+php artisan config:clear
+
+# maintenance mode
+php artisan down
+php artisan down --secret="1234"
+php artisan up
+
+# list artisan commands
+php artisan list
+
+# create custom commands --> app/Console/Commands/CustomCommandName.php
+php artisan make:command CustomCommandName
+
+# get lang configurations to project
+php artisan lang:publish
+
+# route list
+php artisan route:list
+
+# create controller
+php artisan make:controller BikeController --resource
+
+# create model
+php artisan make:model Bike
+
+# create factory
+php artisan make:factory BikeFactory --model=Bike
+# update seeder in database/seeders/DatabaseSeeder.php
+# run and create fake data
+php artisan db:seed --class=DatabaseSeeder
+php artisan make:seeder BikeSeeder
+php artisan db:seed --class=BikeSeeder
+
+# create composer + provider
+# create the composer in app/Http/view/Composers/NameComposer.php
+php artisan make:provider ComposerServiceProvider
+# add to bootstrap providers
+
+# create blade components
+php artisan make:component Alert
+
+# Migrations
+php artisan make:migration --> create a new migration
+php artisan migrate
+php artisan migrate:rollback
+php artisan migrate:reset
+php artisan migrate:refresh
+
+# enable API
+php artisan install:api
+# resource for APIs
+php artisan make:resource UserResource
+
+# create middleware
+php artisan make:middleware EnsureTokenIsValid
+
+# clear cache
+php artisan cache:clear          # Clear application cache
+php artisan config:clear         # Clear config cache
+php artisan view:clear           # Clear compiled views
+php artisan route:clear          # Clear route cache
+php artisan event:clear          # Clear event cache (Laravel 11+)
+
+# create storage symbolic link
+php artisan storage:link
+
+
+
+
+
+
+
+
+
+
+
+
+

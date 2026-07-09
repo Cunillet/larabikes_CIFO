@@ -20,6 +20,7 @@ services:
       - DB_PASSWORD=rootpassword
     depends_on:
       - db
+      - mailpit
     networks:
       - laravel-network
 
@@ -54,9 +55,28 @@ services:
     networks:
       - laravel-network
 
+  # Mailpit - Servidor de correo para desarrollo
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: larabikes_mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"   # Interfaz web de Mailpit
+      - "1025:1025"   # Puerto SMTP
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      MP_DATABASE: /data/mailpit.db
+    volumes:
+      - mailpit_data:/data  # Persistencia opcional
+    networks:
+      - laravel-network
+
 networks:
   laravel-network:
     driver: bridge
 
 volumes:
   db_data:
+  mailpit_data:  # Volumen para Mailpit

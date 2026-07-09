@@ -18,6 +18,8 @@ Route::get('motos/list', [BikeController::class, 'list'])
     ->name('bikes.list');
 Route::get('/motos/search/{brand?}/{model?}', [BikeController::class, 'search'])
     ->name('bikes.search');
+Route::delete('motos/{bike}/image', [BikeController::class, 'destroyImage'])
+    ->name('bikes.destroyImage');
 // define all standard by default with default methods
 // Route::resource('bikes', BikeController::class);
 Route::resource('motos', BikeController::class)
@@ -29,7 +31,7 @@ Route::resource('motos', BikeController::class)
         'edit' => 'bikes.edit',
         'update' => 'bikes.update',
         'destroy' => 'bikes.destroy',
-    ]);
+    ])->parameters(['motos' => 'bike']);
 
 // after standard routes, add custom ones
 Route::get('/motos/{bike}/delete', [BikeController::class, 'delete'])

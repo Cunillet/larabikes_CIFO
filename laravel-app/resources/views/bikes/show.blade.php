@@ -40,12 +40,32 @@
                         <span>{{ $bike->model }}</span>
                     </div>
                     <div class="list-group-item d-flex justify-content-between px-0">
+                        <strong>Horsepower</strong>
+                        <span>{{ $bike->horsepower }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between px-0">
+                        <strong>Buy Date</strong>
+                        <span>{{ $bike->buy_date }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between px-0">
+                        <strong>Color</strong>
+                        <span>{{ $bike->color }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between px-0">
                         <strong>Price</strong>
                         <span>{{ $bike->price }}</span>
                     </div>
                     <div class="list-group-item d-flex justify-content-between px-0">
                         <strong>Kilometers</strong>
                         <span>{{ $bike->kms }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between px-0">
+                        <strong>Bike Plate</strong>
+                        <span>{{ $bike->bike_plate }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between px-0">
+                        <strong>Description</strong>
+                        <span>{{ $bike->description }}</span>
                     </div>
                 </div>
             </div>

@@ -11,9 +11,17 @@ class Bike extends Model
     protected $fillable = [
         'brand',
         'model',
+        'color',
         'kms',
         'price',
         'registered',
+        'bike_plate',
         'image',
+        'description',
+        'buy_date',
+        'horsepower',
+    ];
+    protected $attributes = [
+        'buy_date' => '2000-01-01',
     ];
 }

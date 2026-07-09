@@ -30,10 +30,8 @@
     @endif
     @if ($errors->any())
         <x-alert type="danger" msg="Errors: ">
-            @dump($errors)
-            <ul>
+            <ul class="mt-2 mb-0 text-start">
                 @foreach ($errors->all() as $error)
-                    
                 <li>
                     {{ $error }}
                 </li>

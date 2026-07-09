@@ -164,6 +164,10 @@ php artisan event:clear          # Clear event cache (Laravel 11+)
 php artisan storage:link
 
 
+# mailpit
+brew install mailpit
+brew services start mailpit
+
 
 
 

@@ -17,24 +17,6 @@ class BikeController extends Controller {
         $this->pagination = config('pagination.bikes', 15);
     }
 
-    private function validateBike(Request $request, ?string $id = null, ?bool $confirmed = false) {
-        return $request->validate([
-            'brand' => ['required','string','max:255'],
-            'model' => 'required|string|max:255',
-            'color' => 'nullable|hex_color',
-            'kms' => 'required|integer|min:0',
-            'price' => 'required|numeric|min:0',
-            'registered' => 'required_with:bike_plate',
-            'bike_plate' => ['required_if:registered,1',
-                            'nullable',
-                            'regex:/^\d{4}[B-Z]{3}$/i',
-                            new TextUpper,
-                            Rule::unique('bikes')->ignore($id ?? null),
-                            $confirmed ? 'confirmed': ''],
-            'image' => 'nullable|image|max:5120',
-        ]);
-    }
-
     /**
      * Display a listing of the resource.
      */

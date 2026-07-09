@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BikeController;
 use App\Http\Controllers\TermsController;
+use App\Http\Controllers\ContactController;
 
+/** HOME PAGE */
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
@@ -14,6 +16,7 @@ Route::get('/', function () {
  * })->name('welcome')->middleware('checkage:15');
  */
 
+/** BIKE CRUD */
 Route::get('motos/list', [BikeController::class, 'list'])
     ->name('bikes.list');
 Route::get('/motos/search/{brand?}/{model?}', [BikeController::class, 'search'])
@@ -37,6 +40,11 @@ Route::resource('motos', BikeController::class)
 Route::get('/motos/{bike}/delete', [BikeController::class, 'delete'])
     ->name('bikes.delete')->middleware(['checkage:15', 'throttle:3,1']);
 
+/** CONTACT */
+Route::get('contact', [ContactController::class, 'index'])
+    ->name('contact');
+Route::post('contact', [ContactController::class, 'send'])
+    ->name('contacts.send');
 
 /**
  * Suplement Paths

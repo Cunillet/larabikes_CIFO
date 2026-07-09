@@ -68,6 +68,8 @@ services:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
       MP_DATABASE: /data/mailpit.db
+      # Nota: La contraseña debe estar en texto plano o MD5
+      # MP_SMTP_USERS: "admin:password123,user:pass456"
     volumes:
       - mailpit_data:/data  # Persistencia opcional
     networks:

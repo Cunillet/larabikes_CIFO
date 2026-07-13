@@ -6,7 +6,6 @@
 /yarn.lock
 
 # Entornos
-.env
 .env.local
 .env.*.local
 .env.backup

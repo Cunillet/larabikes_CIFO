@@ -23,6 +23,8 @@ Route::get('/motos/search/{brand?}/{model?}', [BikeController::class, 'search'])
     ->name('bikes.search');
 Route::delete('motos/{bike}/image', [BikeController::class, 'destroyImage'])
     ->name('bikes.destroyImage');
+Route::get('/motos/{bike}/delete', [BikeController::class, 'delete'])
+    ->name('bikes.delete')->middleware(['checkage:15', 'throttle:3,1']);
 // define all standard by default with default methods
 // Route::resource('bikes', BikeController::class);
 Route::resource('motos', BikeController::class)
@@ -36,9 +38,15 @@ Route::resource('motos', BikeController::class)
         'destroy' => 'bikes.destroy',
     ])->parameters(['motos' => 'bike']);
 
-// after standard routes, add custom ones
-Route::get('/motos/{bike}/delete', [BikeController::class, 'delete'])
-    ->name('bikes.delete')->middleware(['checkage:15', 'throttle:3,1']);
+/** PROFILE */
+Route::get('home', [BikeController::class, 'list'])
+    ->name('home');
+Route::get('reset-password/{token}', function ($token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+Route::get('forgot-password', function () {
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
 
 /** CONTACT */
 Route::get('contact', [ContactController::class, 'index'])

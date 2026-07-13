@@ -1,4 +1,4 @@
-
+10.199.26.179
 # Manual setup step by step
 
 # 1. Create project
@@ -168,7 +168,10 @@ php artisan storage:link
 brew install mailpit
 brew services start mailpit
 
-
+# install Fortify
+composer require laravel/fortify
+php artisan fortify:install
+php artisan migrate
 
 
 

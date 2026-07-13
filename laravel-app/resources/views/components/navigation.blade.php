@@ -31,13 +31,14 @@
                 </li>
                 <li class="nav-item">
                     @auth
-                    <a class="nav-link" href="{{ route('welcome') }}">
-                        <i class="bi bi-person-fill me-1"></i>Welcome {{ auth()->user()->name }}
+                    <a class="nav-link" href="{{ route('profile') }}">
+                        <i class="bi bi-person-fill me-1"></i>{{ auth()->user()->name }}
                     </a>
                 </li>
-                <li>
+                <li class="nav-item">
                     <form action="{{ route('logout') }}" method="POST" class="nav-link">
-                        <button class="nav-link p-0"><i class="bi bi-person me-1"></i>Logout</button>
+                        @csrf
+                        <button class="nav-link p-0 border-0 bg-transparent"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
                     </form>
                     @else
                     <a class="nav-link" href="{{ route('login') }}">

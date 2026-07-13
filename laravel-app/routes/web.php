@@ -48,6 +48,11 @@ Route::get('forgot-password', function () {
     return view('auth.forgot-password');
 })->middleware('guest')->name('password.request');
 
+/** PROFILE & 2FA */
+Route::get('profile', function () {
+    return view('auth.two-factor-profile');
+})->middleware(['auth'])->name('profile');
+
 /** CONTACT */
 Route::get('contact', [ContactController::class, 'index'])
     ->name('contact');
@@ -95,4 +100,23 @@ Route::get('/test/redirect', function() {
 
 Route::get('/test/signature', function() {
     abort(401, 'Access denied');
+});
+
+// Debug test route - set breakpoints here
+Route::get("/debug", function () {
+    $testData = [
+        "message" => "Xdebug is working!",
+        "items" => ["Apple", "Banana", "Cherry"],
+        "timestamp" => now()->toDateTimeString()
+    ];
+    
+    $processed = array_map(function($item) {
+        return strtoupper($item);  // Set breakpoint here
+    }, $testData["items"]);
+    
+    return response()->json([
+        "status" => "success",
+        "original" => $testData,
+        "processed" => $processed
+    ]);
 });

@@ -31,7 +31,7 @@
                 </li>
                 <li class="nav-item">
                     @auth
-                    <a class="nav-link" href="{{ route('profile') }}">
+                    <a class="nav-link" href="{{ route('profile.show') }}">
                         <i class="bi bi-person-fill me-1"></i>{{ auth()->user()->name }}
                     </a>
                 </li>

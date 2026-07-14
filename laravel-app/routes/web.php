@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BikeController;
 use App\Http\Controllers\TermsController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\UserController;
 
 /** HOME PAGE */
 Route::get('/', function () {
@@ -39,8 +40,12 @@ Route::resource('motos', BikeController::class)
     ])->parameters(['motos' => 'bike']);
 
 /** PROFILE */
-Route::get('home', [BikeController::class, 'list'])
-    ->name('home');
+Route::get('profile', [UserController::class, 'show'])
+    ->name('profile.show')->middleware(['auth']);
+Route::get('edit', [UserController::class, 'edit'])
+    ->name('profile.edit')->middleware(['auth']);
+Route::put('/profile', [UserController::class, 'update'])
+    ->name('profile.update');
 Route::get('reset-password/{token}', function ($token) {
     return view('auth.reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
@@ -49,9 +54,9 @@ Route::get('forgot-password', function () {
 })->middleware('guest')->name('password.request');
 
 /** PROFILE & 2FA */
-Route::get('profile', function () {
+Route::get('two-factor-profile', function () {
     return view('auth.two-factor-profile');
-})->middleware(['auth'])->name('profile');
+})->middleware(['auth'])->name('auth.two-factor-profile');
 
 /** CONTACT */
 Route::get('contact', [ContactController::class, 'index'])

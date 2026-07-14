@@ -47,6 +47,6 @@
             </div>
         </div>
     </section>
-    <a class="btn btn-secondary btn-lg m-4" href="{{ route('bikes.index') }}">Back</a>
+    <a class="btn btn-secondary btn-lg m-4" href="{{ route('profile.show') }}">Back</a>
 </main>
 @endsection

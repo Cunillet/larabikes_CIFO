@@ -25,7 +25,15 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // custom redirect on login
+        $this->app->singleton(
+            LoginResponse::class,
+            ProfileLoginResponse::class
+        );
+        $this->app->singleton(
+            RegisterResponse::class,
+            ProfileRegisterResponse::class
+        );
     }
 
     /**
@@ -44,15 +52,6 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
 
-        // custom redirect on login
-        $this->app->singleton(
-            LoginResponse::class,
-            ProfileLoginResponse::class
-        );
-        $this->app->singleton(
-            RegisterResponse::class,
-            ProfileRegisterResponse::class
-        );
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());

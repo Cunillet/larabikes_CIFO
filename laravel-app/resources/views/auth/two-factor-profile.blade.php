@@ -32,7 +32,7 @@
                     </div>
                     <div class="card-body">
 
-                        @if (! auth()->user()->two_factor_secret)
+                        @if (!auth()->user()->two_factor_secret)
                             {{-- 2FA INACTIVE --}}
                             <p class="card-text">
                                 Add an extra layer of security to your account using two-factor authentication.

@@ -14,7 +14,6 @@ class RegisterResponse implements RegisterResponseContract
      */
     public function toResponse($request)
     {
-        // Redirigir a la ruta del perfil del usuario después del registro
         return redirect()->route('profile.show');
     }
 }

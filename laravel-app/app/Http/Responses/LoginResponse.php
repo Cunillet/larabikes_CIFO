@@ -14,7 +14,6 @@ class LoginResponse implements LoginResponseContract
      */
     public function toResponse($request)
     {
-        // Redirigir a la ruta del perfil del usuario
         return redirect()->route('profile.show');
     }
 }

@@ -10,6 +10,9 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
+Route::get('home', function () {
+    return view('welcome');
+})->name('welcome');
 /**
  * With middleware
  * Route::get('/', function () {
@@ -42,10 +45,10 @@ Route::resource('motos', BikeController::class)
 /** PROFILE */
 Route::get('profile', [UserController::class, 'show'])
     ->name('profile.show')->middleware(['auth']);
-Route::get('edit', [UserController::class, 'edit'])
+Route::get('profile/edit', [UserController::class, 'edit'])
     ->name('profile.edit')->middleware(['auth']);
-Route::put('/profile', [UserController::class, 'update'])
-    ->name('profile.update');
+Route::post('/email/verification-notification', [UserController::class, 'confirmEmail'])
+    ->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 Route::get('reset-password/{token}', function ($token) {
     return view('auth.reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');

@@ -30,9 +30,10 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    @auth
+                @auth
                     <a class="nav-link" href="{{ route('profile.show') }}">
-                        <i class="bi bi-person-fill me-1"></i>{{ auth()->user()->name }}
+                        <i class="bi bi-person-fill me-1"></i>
+                        {{ auth()->user()->display_name ? auth()->user()->display_name : auth()->user()->name }}
                     </a>
                 </li>
                 <li class="nav-item">
@@ -40,18 +41,18 @@
                         @csrf
                         <button class="nav-link p-0 border-0 bg-transparent"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
                     </form>
-                    @else
+                @else
                     <a class="nav-link" href="{{ route('login') }}">
                         <i class="bi bi-person me-1"></i>Login
                     </a>
                 </li>
                 <li>
-                        @if (Route::has('register'))
-                        <a class="nav-link" href="{{ route('register') }}">
-                            <i class="bi bi-person-add me-1"></i>Register
-                        </a>
-                        @endif
-                    @endguest
+                    @if (Route::has('register'))
+                    <a class="nav-link" href="{{ route('register') }}">
+                        <i class="bi bi-person-add me-1"></i>Register
+                    </a>
+                    @endif
+                @endguest
                 </li>
             </ul>
         </div>

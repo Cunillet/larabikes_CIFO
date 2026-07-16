@@ -20,6 +20,11 @@
                     <div class="card-body">
 
                         <div class="row mb-3">
+                            <div class="col-4 fw-bold">Display Name:</div>
+                            <div class="col-8">{{ $user->display_name }}</div>
+                        </div>
+
+                        <div class="row mb-3">
                             <div class="col-4 fw-bold">Name:</div>
                             <div class="col-8">{{ $user->name }}</div>
                         </div>
@@ -32,6 +37,23 @@
                         <div class="row mb-3">
                             <div class="col-4 fw-bold">Member since:</div>
                             <div class="col-8">{{ $user->created_at->format('d/m/Y H:i') }}</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-4 fw-bold">Birth Date:</div>
+                            <div class="col-8">
+                                {{ $user->birth_date }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-4 fw-bold">City:</div>
+                            <div class="col-8">{{ $user->city }}</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-4 fw-bold">Phone:</div>
+                            <div class="col-8">{{ $user->phone }}</div>
                         </div>
 
                         <div class="text-center mt-4">

@@ -19,7 +19,10 @@
         <x-searchbar />
         @show
         <h1 class="display-4 fw-bold mb-3 d-flex justify-content-between align-items-center">
-            <span>Bikes List</span><a href="{{ route('bikes.create') }}" class="btn btn-success">+</a>
+            <span>Bikes List</span>
+            @auth
+            <a href="{{ route('bikes.create') }}" class="btn btn-success">+</a>
+            @endauth
         </h1>
         
         @if($bikes->count() > 0)

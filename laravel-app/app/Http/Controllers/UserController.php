@@ -76,4 +76,9 @@ class UserController extends Controller
         return redirect()->route('profile.show')
             ->with('success', 'Contraseña actualizada correctamente.');
     }
+
+    public function confirmEmail(Request $request) {
+        $request->user()->sendEmailVerificationNotification(); // <-- Se llama aquí
+        return back()->with('message', '¡Enlace de verificación reenviado!');
+    }
 }

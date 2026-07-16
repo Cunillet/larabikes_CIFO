@@ -13,12 +13,14 @@
             <div class="mt-auto"></div>
             
             <div class="d-flex gap-2 mt-3 justify-content-between px-4">
+                @auth
                 <a class="text-danger text-decoration-none" href="{{ route('bikes.delete', $id) }}">
                     <i class="bi bi-trash3-fill"></i>
                 </a>
                 <a class="text-primary text-decoration-none ms-3" href="{{ route('bikes.edit', $id) }}">
                     <i class="bi bi-pen-fill"></i>
                 </a>
+                @endauth
             </div>
         </div>
     </div>

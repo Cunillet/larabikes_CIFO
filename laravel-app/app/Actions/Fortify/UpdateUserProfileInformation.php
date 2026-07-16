@@ -21,14 +21,17 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     public function update(User $user, array $input): void
     {
         Validator::make($input, [
+            'display_name' => ['nullable', 'string', 'max:32'],
             'name' => ['required', 'string', 'max:255'],
-
             'email' => [
                 'required',
                 'string',
                 'email',
                 'max:255',
                 Rule::unique('users')->ignore($user->id),
+            'birth_date' => ['nullable', 'date'],
+            'phone' => ['nullable', 'string', 'max:16'],
+            'city' => ['nullable', 'string', 'max:256'],
             ],
         ])->validateWithBag('updateProfileInformation');
 
@@ -37,8 +40,12 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $this->updateVerifiedUser($user, $input);
         } else {
             $user->forceFill([
+                'display_name' => $input['display_name'],
                 'name' => $input['name'],
                 'email' => $input['email'],
+                'birth_date' => $input['birth_date'],
+                'phone' => $input['phone'],
+                'city' => $input['city'],
             ])->save();
         }
     }
@@ -51,9 +58,13 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     protected function updateVerifiedUser(User $user, array $input): void
     {
         $user->forceFill([
+            'display_name' => $input['display_name'],
             'name' => $input['name'],
             'email' => $input['email'],
             'email_verified_at' => null,
+            'birth_date' => $input['birth_date'],
+            'phone' => $input['phone'],
+            'city' => $input['city'],
         ])->save();
 
         $user->sendEmailVerificationNotification();

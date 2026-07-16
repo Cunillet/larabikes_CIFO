@@ -45,7 +45,7 @@
                                 </button>
                             </form>
 
-                        @elseif (session('status') == 'two-factor-authentication-enabled' && ! auth()->user()->two_factor_confirmed_at)
+                        @elseif (session('status') == 'two-factor-authentication-enabled' && !auth()->user()->two_factor_confirmed_at)
                             {{-- 2FA ACTIVE but NOT CONFIRMED --}}
                             <p class="card-text text-warning fw-bold">
                                 <i class="bi bi-exclamation-triangle me-1"></i>
@@ -53,7 +53,7 @@
                             </p>
 
                             <div class="text-center my-4">
-                                {!! auth()->user()->twoFactorQrCodeSvg() !!}
+                                {!!auth()->user()->twoFactorQrCodeSvg() !!}
                             </div>
 
                             <p class="small text-muted">

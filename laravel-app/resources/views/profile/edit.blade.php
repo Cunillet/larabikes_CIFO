@@ -22,10 +22,22 @@
 
             <form 
                 method="POST" 
-                action="{{ route('profile.update') }}"
+                action="{{ route('user-profile-information.update') }}"
                 class="col-12 col-lg-7">
                 @csrf
                 @method('PUT')
+
+                <div class="row form-group mb-2">
+                    <label class="col-3 col-form-label fw-bold" for="inputDisplayName">Display Name</label>
+                    <input 
+                        class="col up form-control rounded" 
+                        name="display_name" 
+                        id="inputDisplayName" 
+                        type="text" 
+                        value="{{ old('display_name', $user->display_name) }}" 
+                        required 
+                        autofocus/>
+                </div>
 
                 <div class="row form-group mb-2">
                     <label class="col-3 col-form-label fw-bold" for="inputName">Name</label>
@@ -50,6 +62,37 @@
                         required/>
                 </div>
 
+                <div class="row form-group mb-2">
+                    <label class="col-3 col-form-label fw-bold" for="inputBirthDate">Birth Date</label>
+                    <input 
+                        class="col up form-control rounded" 
+                        name="birth_date" 
+                        id="inputBirthDate" 
+                        type="date" 
+                        value="{{ old('birth_date', $user->birth_date_for_input) }}" 
+                        required/>
+                </div>
+
+                <div class="row form-group mb-2">
+                    <label class="col-3 col-form-label fw-bold" for="inputCity">City</label>
+                    <input 
+                        class="col up form-control rounded" 
+                        name="city" 
+                        id="inputCity" 
+                        type="text" 
+                        value="{{ old('city', $user->city) }}"/>
+                </div>
+
+                <div class="row form-group mb-2">
+                    <label class="col-3 col-form-label fw-bold" for="inputPhone">Phone</label>
+                    <input 
+                        class="col up form-control rounded" 
+                        name="phone" 
+                        id="inputPhone" 
+                        type="phone" 
+                        value="{{ old('phone', $user->phone) }}"/>
+                </div>
+
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-success mt-5 mr-2">
                         <i class="fas fa-save me-2"></i>Update
@@ -61,10 +104,18 @@
             </form>
         </div>
             
-        <div class="col-12 col-lg-7 mt-5 form-group text-center">
+        <div class="col-12 col-lg-7 mt-5 form-group text-center row">
             <a href="{{ route('auth.two-factor-profile') }}" class="btn btn-primary">
                 Update Two-StepFactor
             </a>
+            @if (!auth()->user()->hasVerifiedEmail())
+                <form method="POST" action="{{ route('verification.send') }}" class="row p-0 mx-0 mt-3">
+                    @csrf
+                    <button type="submit" class="btn btn-success">Reenviar email de verificación</button>
+                </form>
+            @endif
+        </div>
+        <div class="col-12 col-lg-7 mt-5 form-group text-center">
         </div>
     </section>
     <a class="btn btn-secondary btn-lg m-4" href="{{ route('profile.show') }}">Back</a>

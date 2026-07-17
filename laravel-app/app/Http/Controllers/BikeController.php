@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteBikeRequest;
 use App\Http\Requests\StoreBikeRequest;
 use App\Http\Requests\UpdateBikeRequest;
-use App\Rules\TextUpper;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Models\Bike;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class BikeController extends Controller {
+
+    use AuthorizesRequests;
     private int $pagination;
 
     public function __construct() {
@@ -40,6 +44,9 @@ class BikeController extends Controller {
      * Show the form for creating a new resource.
      */
     public function create() {
+        if (Gate::denies('create', Bike::class)) {
+            abort(403, 'Please Login with a verified account to create Motos.');
+        }
         return view('bikes.create');
     }
 
@@ -47,12 +54,18 @@ class BikeController extends Controller {
      * Store a newly created resource in storage.
      */
     public function store(StoreBikeRequest $request) {
+        if (Gate::denies('create', Bike::class)) {
+            abort(403, 'Please Login with a verified account to create Motos.');
+        }
         $validated = $request->validated();
+        $validated['user_id'] = Auth::id();
         if (empty($validated['buy_date'])) {
             unset($validated['buy_date']);
         }
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('image/bike', 'public');
+        } else {
+            unset($validated['image']);
         }
 
         $bike = Bike::create($validated);
@@ -75,6 +88,9 @@ class BikeController extends Controller {
      */
     public function edit(string $id) {
         $bike = Bike::findOrFail($id);
+        if (Gate::denies('update', $bike)) {
+            abort(403, 'You do not have enough privileges to do this operation.');
+        }
         return view('bikes.edit', [
             'bike' => $bike
         ]);
@@ -86,6 +102,10 @@ class BikeController extends Controller {
     public function update(UpdateBikeRequest $request, string $id) {
         $validated = $request->validated();
         $bike = Bike::findOrFail($id);
+        if (Gate::denies('update', $bike)) {
+            abort(403, 'You do not have enough privileges to do this operation.');
+        }
+
         $oldImg = null;
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('image/bike', 'public');
@@ -142,8 +162,12 @@ class BikeController extends Controller {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) {
+    public function destroy(DeleteBikeRequest $request, string $id) {
         $bike = Bike::findOrFail($id);
+        if (Gate::denies('delete', $bike)) {
+            abort(403, 'You do not have enough privileges to do this operation.');
+        }
+
         try {
             $bike->delete();
             if ($bike->image) {
@@ -157,6 +181,9 @@ class BikeController extends Controller {
     }
 
     public function destroyImage(Bike $bike) {
+        if (Gate::denies('update', $bike)) {
+            abort(403, 'You do not have enough privileges to do this operation.');
+        }
         $image = $bike->image;
         try {
             $bike->update(['image' => null]);
@@ -172,8 +199,11 @@ class BikeController extends Controller {
     /**
      * Show confirmation page before destroy
      */
-    public function delete(string $id) {
+    public function delete(DeleteBikeRequest $request, string $id) {
         $bike = Bike::findOrFail($id);
+        if (Gate::denies('delete', $bike)) {
+            abort(403, 'You do not have enough privileges to do this operation.');
+        }
         return view('bikes.delete', [
             'bike' => $bike
         ]);

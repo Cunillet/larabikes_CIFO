@@ -20,21 +20,16 @@
         @show
         <h1 class="display-4 fw-bold mb-3 d-flex justify-content-between align-items-center">
             <span>Bikes List</span>
-            @auth
+            @can('create', App\Models\Bike::class)
             <a href="{{ route('bikes.create') }}" class="btn btn-success">+</a>
-            @endauth
+            @endCan
         </h1>
         
         @if($bikes->count() > 0)
             <div class="row g-4">
             @foreach($bikes as $bike)
                 <x-biketile
-                    id="{{ $bike->id }}"
-                    brand="{{ $bike->brand }}"
-                    model="{{ $bike->model }}"
-                    kms="{{ $bike->kms }}"
-                    image="{{ $bike->image }}"
-                    price="{{ $bike->price }}"
+                    :bike="$bike"
                     />
             @endforeach
             </div>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Bike;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\TextUpper;
@@ -14,7 +16,12 @@ class StoreBikeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('create', Bike::class) ?? false;
+    }
+
+    protected function failedAuthorization()
+    {
+        throw new AuthorizationException('Unable to Store a bike if not registered and verified');
     }
 
     /**

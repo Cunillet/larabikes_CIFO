@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Bike;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -15,8 +16,8 @@ class UpdateBikeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // return $this->user()->can('update', $this->bike);
-        return true;
+        $bike = Bike::find($this->bike);
+        return $this->user()?->can('update', $bike) ?? false;
     }
 
     protected function failedAuthorization()

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->date('birth_date')->default(now());
             $table->string('city', 256)->nullable();
             $table->string('phone', 16)->nullable();
-            $table->string('display_name', 32)->nullable();
+            $table->string('display_name', 32)->nullable()->unique();
         });
     }
 

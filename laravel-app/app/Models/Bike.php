@@ -9,6 +9,7 @@ class Bike extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'brand',
         'model',
         'color',

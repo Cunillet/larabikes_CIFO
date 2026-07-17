@@ -19,11 +19,13 @@
                         <i class="bi bi-parking me-1"></i>Parking
                     </a>
                 </li>
+                @can('create', App\Models\Bike::class)
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('bikes.create') }}">
                         <i class="bi bi-plus-circle me-1"></i>New bike
                     </a>
                 </li>
+                @endcan
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('contact') }}">
                         <i class="bi bi-envelope me-1"></i>Contact

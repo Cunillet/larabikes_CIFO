@@ -83,18 +83,24 @@
             </div>
         </div>
     </section>
+    @can('manage', $bike)
     <section class="p-4 my-3 bg-light rounded btn-group text-muted">
         <div>
             More Operations:
         </div>
+        @can('delete', $bike)
         <a href="{{ route('bikes.delete', $bike->id) }}" class="text-decoration-none mx-3 text-danger">
             <i class="bi bi-trash3-fill"></i>
         </a>
+        @endcan
 
+        @can('update', $bike)
         <a href="{{ route('bikes.edit', $bike->id) }}" class="text-decoration-none mx-3">
             <i class="bi bi-pen-fill"></i>
         </a>
+        @endcan
     </section>
+    @endcan
     <a class="btn btn-secondary btn-lg m-4" href="{{ route('bikes.index') }}">Back</a>
 </main>
 @endsection

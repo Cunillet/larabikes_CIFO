@@ -51,7 +51,28 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
-
+        // Fortify::updateUserProfileInformationUsing(function ($request) {
+        //     $user = $request->user();
+            
+        //     $user->update([
+        //         'display_name' => $request->display_name,
+        //         'name' => $request->name,
+        //         'email' => $request->email,
+        //         'birth_date' => $request->birth_date,
+        //     ]);
+            
+        //     // Actualizar contact_data
+        //     $user->contactData()->updateOrCreate(
+        //         ['user_id' => $user->id],
+        //         [
+        //             'phone' => $request->phone,
+        //             'address' => $request->address,
+        //             'country_id' => $request->country_id,
+        //         ]
+        //     );
+            
+        //     return $user;
+        // });
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());

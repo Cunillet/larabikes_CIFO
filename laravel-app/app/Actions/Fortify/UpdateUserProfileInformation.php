@@ -30,8 +30,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'max:255',
                 Rule::unique('users')->ignore($user->id),
             'birth_date' => ['nullable', 'date'],
-            'phone' => ['nullable', 'string', 'max:16'],
-            'city' => ['nullable', 'string', 'max:256'],
+            // contact data
+            'phone' => ['nullable', 'string', 16],
+            'address' => ['nullable', 'string', 255],
+            'city' => ['nullable', 'string', 127],
+            'country_id' => ['nullable', 'string', 2],
             ],
         ])->validateWithBag('updateProfileInformation');
 
@@ -44,10 +47,18 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'name' => $input['name'],
                 'email' => $input['email'],
                 'birth_date' => $input['birth_date'],
-                'phone' => $input['phone'],
-                'city' => $input['city'],
             ])->save();
         }
+
+        $user->contactData()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'phone' => $input['phone'],
+                'address' => $input['address'],
+                'city' => $input['city'],
+                'country_id' => $input['country_id'],
+            ]
+        );
     }
 
     /**
@@ -63,10 +74,8 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'email' => $input['email'],
             'email_verified_at' => null,
             'birth_date' => $input['birth_date'],
-            'phone' => $input['phone'],
-            'city' => $input['city'],
         ])->save();
 
-        $user->sendEmailVerificationNotification();
+        // $user->sendEmailVerificationNotification();
     }
 }

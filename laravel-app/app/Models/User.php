@@ -15,7 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-#[Fillable(['display_name', 'name', 'email', 'birth_date', 'phone', 'city', 'password'])]
+#[Fillable(['display_name', 'name', 'email', 'birth_date', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -112,5 +112,40 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function bikes(): HasMany {
         return $this->hasMany(Bike::class);
+    }
+
+    public function contactData()
+    {
+        return $this->hasOne(ContactData::class);
+    }
+
+    // 🔹 phone accessor
+    public function getPhoneAttribute()
+    {
+        return $this->contactData?->phone;
+    }
+
+    // 🔹 address accessor
+    public function getAddressAttribute()
+    {
+        return $this->contactData?->address;
+    }
+
+    // 🔹 address accessor
+    public function getCityAttribute()
+    {
+        return $this->contactData?->city;
+    }
+
+    // 🔹 country_id accessor
+    public function getCountryIdAttribute()
+    {
+        return $this->contactData?->country_id;
+    }
+
+    // 🔹 country accessor
+    public function getCountryAttribute()
+    {
+        return $this->contactData?->country;
     }
 }

@@ -1,4 +1,3 @@
-10.199.26.179
 # Manual setup step by step
 
 # 1. Create project

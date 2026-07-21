@@ -74,6 +74,26 @@
                 </div>
 
                 <div class="row form-group mb-2">
+                    <label class="col-3 col-form-label fw-bold" for="inputPhone">Phone</label>
+                    <input 
+                        class="col up form-control rounded" 
+                        name="phone" 
+                        id="inputPhone" 
+                        type="text" 
+                        value="{{ old('phone', $user->phone) }}"/>
+                </div>
+
+                <div class="row form-group mb-2">
+                    <label class="col-3 col-form-label fw-bold" for="inputAddress">Address</label>
+                    <input 
+                        class="col up form-control rounded" 
+                        name="address" 
+                        id="inputAddress" 
+                        type="text" 
+                        value="{{ old('address', $user->address) }}"/>
+                </div>
+
+                <div class="row form-group mb-2">
                     <label class="col-3 col-form-label fw-bold" for="inputCity">City</label>
                     <input 
                         class="col up form-control rounded" 
@@ -84,13 +104,20 @@
                 </div>
 
                 <div class="row form-group mb-2">
-                    <label class="col-3 col-form-label fw-bold" for="inputPhone">Phone</label>
-                    <input 
+                    <label class="col-3 col-form-label fw-bold" for="selectCountryId">Country</label>
+                    <select 
                         class="col up form-control rounded" 
-                        name="phone" 
-                        id="inputPhone" 
-                        type="phone" 
-                        value="{{ old('phone', $user->phone) }}"/>
+                        name="country_id" 
+                        id="selectCountryId">
+                        <option value="">-- none --</option>
+                        @foreach ($countries as $country)
+                            <option
+                            value="{{ $country->id }}"
+                            @if ($user->countryId === $country->id)
+                                selected
+                            @endif>{{ $country->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group text-center">

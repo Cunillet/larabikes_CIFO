@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    { //'name', 'location', 'country_id', 'length', 'turns', 'capacity', 'image', 'description'
+    {
         Schema::create('circuits', function (Blueprint $table) {
             $table->id();
             $table->string('name', 256)->unique();
@@ -37,6 +37,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('circuits', function (Blueprint $table) {
+            $table->dropForeign('circuits_country_id_foreign');
+        });
         Schema::dropIfExists('circuits');
     }
 };

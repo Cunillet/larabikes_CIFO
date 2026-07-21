@@ -39,6 +39,12 @@
                         <strong>Model</strong>
                         <span>{{ $bike->model }}</span>
                     </div>
+                    @if ($bike->user)
+                    <div class="list-group-item d-flex justify-content-between px-0">
+                        <strong>Owner</strong>
+                        <span>{{ $bike->user->display_name ?? $bike->user->name }}</span>
+                    </div>
+                    @endif
                     <div class="list-group-item d-flex justify-content-between px-0">
                         <strong>Horsepower</strong>
                         <span>{{ $bike->horsepower }}</span>

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -52,6 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'birth_date' => 'date',
             'password' => 'hashed',
         ];
     }
@@ -101,5 +103,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getEmailForVerification()
     {
         return $this->email;
+    }
+
+    /**
+     * Get User related bikes
+     * 
+     * @return HasMany
+     */
+    public function bikes(): HasMany {
+        return $this->hasMany(Bike::class);
     }
 }

@@ -14,6 +14,13 @@
     </section>
     <section class="p-4 rounded shadow-sm bg-light text-muted mb-5">
         @if($bikes->count() > 0)
+        <h2 class="fw-bold mb-3 d-flex justify-content-between align-items-center">
+            @if ($userBikes)
+                Last User bikes
+            @else
+                Last Platform Bikes
+            @endif
+        </h2>
             <div class="row g-4">
             @foreach($bikes as $bike)
                 <x-biketile

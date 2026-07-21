@@ -12,7 +12,7 @@
 </li>
 @endsection
 @section('content')
-<main class="container">
+<main class="container content-with-fixed-footer">
     <section class="p-4 rounded shadow-sm bg-light text-muted">
         <h1 class="display-4 fw-bold mb-3">
             <span class="fw-bold text-red">DELETE: </span>{{ $bike->brand }} - {{ $bike->model }}

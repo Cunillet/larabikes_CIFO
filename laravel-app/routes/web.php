@@ -2,17 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BikeController;
-use App\Http\Controllers\TermsController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TermsController;
 use App\Http\Controllers\UserController;
 
 /** HOME PAGE */
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
-Route::get('home', function () {
-    return view('welcome');
-})->name('welcome');
+Route::get('/', [HomeController::class, 'index'])->name('welcome');
+Route::get('home', [HomeController::class, 'index'])->name('home');
 /**
  * With middleware
  * Route::get('/', function () {

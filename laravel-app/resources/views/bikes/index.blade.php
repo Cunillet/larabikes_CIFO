@@ -13,7 +13,7 @@
         background-color: lightgray;
     }
 </style>
-<main class="container">
+<main class="container content-with-fixed-footer">
     <section class="p-4 rounded shadow-sm bg-light text-muted">
         @section('searchbar')
         <x-searchbar />
@@ -30,6 +30,7 @@
             @foreach($bikes as $bike)
                 <x-biketile
                     :bike="$bike"
+                    :editable="true"
                     />
             @endforeach
             </div>

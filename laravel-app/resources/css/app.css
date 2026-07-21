@@ -7,3 +7,12 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+.content-with-fixed-footer {
+    padding-bottom: 140px;
+}
+
+@media (min-width: 768px) {
+    .content-with-fixed-footer {
+        padding-bottom: 100px; /* Footer más alto en móvil */
+    }
+}

@@ -12,7 +12,7 @@
 </li>
 @endsection
 @section('content')
-<main class="container">
+<main class="container content-with-fixed-footer">
     <section class="p-4 rounded shadow-sm bg-light text-muted">
         <div class="row g-4 align-items-center">
             <h1 class="display-4 fw-bold mb-3">

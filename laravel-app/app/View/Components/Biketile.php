@@ -10,15 +10,20 @@ use Illuminate\View\Component;
 class Biketile extends Component
 {
     public Bike $bike;
+    public bool $editable;
     /**
      * Create a new component instance.
      */
-    public function __construct(Bike $bike)
+    public function __construct(Bike $bike, bool $editable)
     {
         if (empty($bike->image)) {
             $bike['image'] = 'image/img-not-found.jpg';
         }
         $this->bike = $bike;
+        if (is_string($editable)) {
+            $editable = filter_var($editable, FILTER_VALIDATE_BOOLEAN);
+        }
+        $this->editable = $editable;
     }
 
     /**

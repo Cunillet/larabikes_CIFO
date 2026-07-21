@@ -11,19 +11,20 @@
             <p class="card-text text-muted text-center small">{{ $bike->price }} €</p>
             
             <div class="mt-auto"></div>
-            
-            <div class="d-flex gap-2 mt-3 justify-content-between px-4">
-                @can ('delete', $bike)
-                <a class="text-danger text-decoration-none" href="{{ route('bikes.delete', $bike->id) }}">
-                    <i class="bi bi-trash3-fill"></i>
-                </a>
-                @endcan
-                @can ('update', $bike)
-                <a class="text-primary text-decoration-none ms-3" href="{{ route('bikes.edit', $bike->id) }}">
-                    <i class="bi bi-pen-fill"></i>
-                </a>
-                @endcan
-            </div>
+            @if ($editable)
+                <div class="d-flex gap-2 mt-3 justify-content-between px-4">
+                    @can ('delete', $bike)
+                    <a class="text-danger text-decoration-none" href="{{ route('bikes.delete', $bike->id) }}">
+                        <i class="bi bi-trash3-fill"></i>
+                    </a>
+                    @endcan
+                    @can ('update', $bike)
+                    <a class="text-primary text-decoration-none ms-3" href="{{ route('bikes.edit', $bike->id) }}">
+                        <i class="bi bi-pen-fill"></i>
+                    </a>
+                    @endcan
+                </div>
+            @endif
         </div>
     </div>
 </div>

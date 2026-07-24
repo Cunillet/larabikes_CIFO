@@ -36,7 +36,7 @@ class BikePolicy
      */
     public function manage(User $user, Bike $bike): bool
     {
-        return $user->id == $bike->user_id;
+        return $user->isOwner($bike) || $user->hasRole(['admin', 'editor']);
     }
 
     /**
@@ -44,7 +44,7 @@ class BikePolicy
      */
     public function update(User $user, Bike $bike): bool
     {
-        return $user->id == $bike->user_id;
+        return $user->isOwner($bike) || $user->hasRole(['admin', 'editor']);
     }
 
     /**
@@ -52,7 +52,7 @@ class BikePolicy
      */
     public function delete(User $user, Bike $bike): bool
     {
-        return $user->id == $bike->user_id;
+        return $user->isOwner($bike) || $user->hasRole(['admin', 'moderator']);
     }
 
     /**
@@ -60,7 +60,7 @@ class BikePolicy
      */
     public function restore(User $user, Bike $bike): bool
     {
-        return false;
+        return $user->isOwner($bike) || $user->hasRole(['admin']);
     }
 
     /**
@@ -68,6 +68,6 @@ class BikePolicy
      */
     public function forceDelete(User $user, Bike $bike): bool
     {
-        return $user->id == $bike->user_id;
+        return $user->isOwner($bike) || $user->hasRole(['admin']);
     }
 }

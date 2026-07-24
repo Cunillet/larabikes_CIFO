@@ -31,6 +31,7 @@
                 <x-biketile
                     :bike="$bike"
                     :editable="true"
+                    :restorable="false"
                     />
             @endforeach
             </div>

@@ -20,7 +20,7 @@ class UserPolicy
      */
     public function view(User $user): bool
     {
-        return $user->id === Auth::user()->id;
+        return $user->id === Auth::user()->id || $user->hasRole(['admin']);
     }
 
     /**
@@ -52,7 +52,7 @@ class UserPolicy
      */
     public function delete(User $user): bool
     {
-        return $user->id == Auth::user()->id;
+        return $user->id == Auth::user()->id || $user->hasRole(['admin']);
     }
 
     /**
@@ -68,6 +68,6 @@ class UserPolicy
      */
     public function forceDelete(User $user, Bike $bike): bool
     {
-        return $user->id == $bike->user_id;
+        return $user->id == $bike->user_id || $user->hasRole(['admin']);
     }
 }

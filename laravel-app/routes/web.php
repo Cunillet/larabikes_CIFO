@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BikeController;
 use App\Http\Controllers\ContactController;
@@ -8,14 +9,12 @@ use App\Http\Controllers\TermsController;
 use App\Http\Controllers\UserController;
 
 /** HOME PAGE */
-Route::get('/', [HomeController::class, 'index'])->name('welcome');
-Route::get('home', [HomeController::class, 'index'])->name('home');
-/**
- * With middleware
- * Route::get('/', function () {
- *      return view('welcome');
- * })->name('welcome')->middleware('checkage:15');
- */
+Route::get('home', [HomeController::class, 'index'])
+    ->middleware('auth')
+    ->name('home');
+Route::get('/', [HomeController::class, 'index'])
+    ->name('welcome');
+
 
 /** BIKE CRUD */
 Route::get('motos/list', [BikeController::class, 'list'])
@@ -26,6 +25,11 @@ Route::delete('motos/{bike}/image', [BikeController::class, 'destroyImage'])
     ->name('bikes.destroyImage');
 Route::get('/motos/{bike}/delete', [BikeController::class, 'delete'])
     ->name('bikes.delete')->middleware(['checkage:15', 'throttle:3,1']);
+Route::delete('motos/purge', [BikeController::class, 'purge'])
+    ->name('bikes.purge');
+Route::put('motos/restore', [BikeController::class, 'restore'])
+    ->name('bikes.restore');
+
 // define all standard by default with default methods
 // Route::resource('bikes', BikeController::class);
 Route::resource('motos', BikeController::class)
@@ -63,6 +67,24 @@ Route::get('contact', [ContactController::class, 'index'])
     ->name('contact');
 Route::post('contact', [ContactController::class, 'send'])
     ->name('contacts.send');
+
+/** ADMIN */
+Route::prefix('admin')
+    ->middleware('auth', 'is_admin')
+    ->group(function() {
+        Route::get('admin/dashboard', [AdminController::class, 'index'])
+            ->name('admin.dashboard');
+        Route::get('admin/settings', [AdminController::class, 'settings'])
+            ->name('admin.settings');
+        Route::get('deletedbikes', [AdminController::class, 'deletedBikes'])
+            ->name('admin.deleted.bikes');
+        Route::get('user/{user}/details', [AdminController::class, 'userDetails'])
+            ->name('admin.user.details');
+        Route::get('admin/users', [AdminController::class, 'usersList'])
+            ->name('admin.users');
+        Route::get('admin/users/search', [AdminController::class, 'usersList'])
+            ->name('admin.users.search');
+    });
 
 /**
  * Suplement Paths

@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CheckAge;
+use App\Http\Middleware\IsAdmin;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Add middleware alias to call it in some routes
         $middleware->alias([
             'checkage' => CheckAge::class,
+            'is_admin' => IsAdmin::class,
         ]);
 
         // Add exceptions to cookie encrypt

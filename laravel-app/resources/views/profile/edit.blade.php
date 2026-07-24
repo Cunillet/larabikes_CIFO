@@ -129,10 +129,66 @@
                     </a>
                 </div>
             </form>
+            <div class="col-12 col-lg-7 mt-5">
+                <hr class="my-4">
+                <h3 class="fw-bold text-black">Change Password</h3>
+                
+                <form 
+                    method="POST" 
+                    action="{{ route('user-password.update') }}"
+                    class="mt-3">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="row form-group mb-2">
+                        <label class="col-3 col-form-label fw-bold" for="current_password">Current Password</label>
+                        <input 
+                            class="col up form-control rounded" 
+                            name="current_password" 
+                            id="current_password" 
+                            type="password" 
+                            required/>
+                        @error('current_password', 'updatePassword')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="row form-group mb-2">
+                        <label class="col-3 col-form-label fw-bold" for="password">New Password</label>
+                        <input 
+                            class="col up form-control rounded" 
+                            name="password" 
+                            id="password" 
+                            type="password" 
+                            required/>
+                        @error('password', 'updatePassword')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="row form-group mb-2">
+                        <label class="col-3 col-form-label fw-bold" for="password_confirmation">Confirm Password</label>
+                        <input 
+                            class="col up form-control rounded" 
+                            name="password_confirmation" 
+                            id="password_confirmation" 
+                            type="password" 
+                            required/>
+                    </div>
+
+                    <div class="form-group text-center mt-3">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-key me-2"></i>Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-            
-        <div class="col-12 col-lg-7 mt-5 form-group text-center row">
-            <a href="{{ route('auth.two-factor-profile') }}" class="btn btn-primary">
+
+        <div class="col-12 col-lg-7 mt-5 form-group row">
+            <hr class="my-4">
+            <h3 class="fw-bold text-black mb-4">Security Configurations</h3>
+            <a href="{{ route('auth.two-factor-profile') }}" class="btn btn-primary mb-4">
                 Update Two-StepFactor
             </a>
             @if (!auth()->user()->hasVerifiedEmail())

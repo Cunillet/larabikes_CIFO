@@ -9,12 +9,10 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        // direct call to static method
-        // $bikes = Moto::getLatestWithImage(4);
-
         $userBikes = false;
-        if (!empty($request->user()) && $request->user()->bikes->count() > 0) {
-            $bikes = $request->user()->bikes;
+        $user = $request->user();
+        if (!empty($user) && $user->bikes->count() > 0) {
+            $bikes = $user->bikes;
             $userBikes = true;
         } else {
             $bikes = Bike::withImage()
@@ -22,7 +20,22 @@ class HomeController extends Controller
                 ->limit(4)
                 ->get();
         }
+        if ($user) {
+            if ($user->hasRole(['admin'])) {
+            $deletedBikes = Bike::onlyTrashed()->get();
+            } else {
+                $deletedBikes = Bike::onlyTrashed()
+                    ->where('user_id', $user->id)
+                    ->get();
+            }
+        } else {
+            $deletedBikes = collect([]);
+        }
 
-        return view('welcome', ['bikes' => $bikes, 'userBikes' => $userBikes]);
+        return view('welcome', [
+            'bikes' => $bikes,
+            'userBikes' => $userBikes,
+            'deletedBikes' => $deletedBikes,
+        ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateBikeRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Models\Bike;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -170,9 +171,10 @@ class BikeController extends Controller {
 
         try {
             $bike->delete();
-            if ($bike->image) {
-                Storage::disk('public')->delete($bike->image);
-            }
+            // do not remove because of soft deletes
+            // if ($bike->image) {
+            //     Storage::disk('public')->delete($bike->image);
+            // }
         } catch (\Exception $e) {
             logger("Error while removing bike: {$bike->id}");
         }
@@ -207,5 +209,37 @@ class BikeController extends Controller {
         return view('bikes.delete', [
             'bike' => $bike
         ]);
+    }
+
+    public function purge(Request $request) {
+        $bike = Bike::onlyTrashed()->findOrFail($request->id);
+
+        if ($request->user()->cant('delete', $bike)) {
+            throw new AuthorizationException('You do not have privileges enough in order to delete this bike');
+        }
+        try {
+            if ($bike->forceDelete() && $bike->image) {
+                Storage::disk('public')->delete($bike->image);
+            }
+        } catch (\Exception $e) {
+            abort(512, 'Error processing bike destroy. Please try again later or contact your administrator.<br>'.$e);
+        }
+        return back()->with(
+            'success',
+            "Bike {$bike->brand} {$bike->model} has been destroyed successfully"
+        );
+    }
+
+    public function restore(Request $request) {
+        $bike = Bike::withTrashed()->findOrFail($request->id);
+
+        if ($request->user()->cant('restore', $bike)) {
+            throw new AuthorizationException('You do not have privileges enough in order to restore this bike');
+        }
+        $bike->restore();
+        return back()->with(
+            'success',
+            "Bike {$bike->brand} {$bike->model} has been restored successfully"
+        );
     }
 }

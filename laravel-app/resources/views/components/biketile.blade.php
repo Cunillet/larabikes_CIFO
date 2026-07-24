@@ -24,6 +24,31 @@
                     </a>
                     @endcan
                 </div>
+            @elseif ($restorable)
+                <div class="d-flex gap-2 mt-3 justify-content-between px-4">
+                    <form action="{{ route('bikes.purge') }}" method="POST">
+                        @method('DELETE')
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $bike->id }}">
+                        <button
+                            onclick="return confirm('Confirm delete bike {{ $bike->brand }} {{ $bike->model }}?')"
+                            type="submit"
+                            class="text-danger text-decoration-none">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </form>
+                    <form action="{{ route('bikes.restore') }}" method="POST">
+                        @method('PUT')
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $bike->id }}">
+                        <button
+                            onclick="return confirm('Confirm restore bike {{ $bike->brand }} {{ $bike->model }}?')"
+                            type="submit"
+                            class="text-primary text-decoration-none ms-3">
+                            <i class="bi bi-pen-fill"></i>
+                        </button>
+                    </form>
+                </div>
             @endif
         </div>
     </div>

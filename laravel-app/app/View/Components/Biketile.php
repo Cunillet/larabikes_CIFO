@@ -11,10 +11,11 @@ class Biketile extends Component
 {
     public Bike $bike;
     public bool $editable;
+    public bool $restorable;
     /**
      * Create a new component instance.
      */
-    public function __construct(Bike $bike, bool $editable)
+    public function __construct(Bike $bike, bool $editable, bool $restorable)
     {
         if (empty($bike->image)) {
             $bike['image'] = 'image/img-not-found.jpg';
@@ -24,6 +25,10 @@ class Biketile extends Component
             $editable = filter_var($editable, FILTER_VALIDATE_BOOLEAN);
         }
         $this->editable = $editable;
+        if (is_string($restorable)) {
+            $restorable = filter_var($restorable, FILTER_VALIDATE_BOOLEAN);
+        }
+        $this->restorable = $restorable;
     }
 
     /**

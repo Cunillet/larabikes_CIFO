@@ -16,7 +16,7 @@
         @if($bikes->count() > 0)
         <h2 class="fw-bold mb-3 d-flex justify-content-between align-items-center">
             @if ($userBikes)
-                Last User bikes
+                Last User Bikes
             @else
                 Last Platform Bikes
             @endif
@@ -26,10 +26,27 @@
                 <x-biketile
                     :bike="$bike"
                     :editable="false"
+                    :restorable="false"
                     />
             @endforeach
             </div>
         @endif
     </section>
+    @if($deletedBikes->count() > 0)
+        <section class="p-4 rounded shadow-sm bg-light text-muted mb-5">
+            <h2 class="fw-bold mb-3 d-flex justify-content-between align-items-center">
+                Deleted bikes
+            </h2>
+            <div class="row g-4">
+            @foreach($deletedBikes as $bike)
+                <x-biketile
+                    :bike="$bike"
+                    :editable="false"
+                    :restorable="true"
+                    />
+            @endforeach
+            </div>
+        </section>
+    @endif
 </main>
 @endsection

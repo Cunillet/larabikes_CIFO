@@ -46,6 +46,41 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <div class="col-4 fw-bold">Phone:</div>
+                            <div class="col-8">
+                                {{ $user->phone }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-4 fw-bold">Address:</div>
+                            <div class="col-8">
+                                {{ $user->address }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-4 fw-bold">City:</div>
+                            <div class="col-8">
+                                {{ $user->city }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-4 fw-bold">Country:</div>
+                            <div class="col-8">
+                                {{ $user->country?->name }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-4 fw-bold">Owned Bikes:</div>
+                            <div class="col-8">
+                                {{ $user->bikes->count() }}
+                            </div>
+                        </div>
+
                         <div class="text-center mt-4">
                             <a href="{{ route('profile.edit') }}" class="btn btn-primary">
                                 <i class="fas fa-edit me-2"></i>Edit Profile

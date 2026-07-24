@@ -119,33 +119,74 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(ContactData::class);
     }
 
-    // 🔹 phone accessor
+    // phone accessor
     public function getPhoneAttribute()
     {
         return $this->contactData?->phone;
     }
 
-    // 🔹 address accessor
+    // address accessor
     public function getAddressAttribute()
     {
         return $this->contactData?->address;
     }
 
-    // 🔹 address accessor
+    // address accessor
     public function getCityAttribute()
     {
         return $this->contactData?->city;
     }
 
-    // 🔹 country_id accessor
+    // country_id accessor
     public function getCountryIdAttribute()
     {
         return $this->contactData?->country_id;
     }
 
-    // 🔹 country accessor
+    // country accessor
     public function getCountryAttribute()
     {
         return $this->contactData?->country;
+    }
+
+    // attribute roles
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
+    }
+
+    public function hasAllRoles(string|array $roleNames): bool
+    {
+        if (!is_array($roleNames)) {
+            $roleNames = [$roleNames];
+        }
+        $foundRoles = 0;
+        foreach($this->roles as $role) {
+            if (in_array($role->role, $roleNames)) {
+                $foundRoles++;
+            }
+        }
+        if ($foundRoles < count($roleNames)) {
+            return false;
+        }
+        return true;
+    }
+
+    public function hasRole(string|array $roleNames): bool
+    {
+        if (!is_array($roleNames)) {
+            $roleNames = [$roleNames];
+        }
+        foreach($this->roles as $role) {
+            if (in_array($role->role, $roleNames)) {
+                return true;
+            }
+        }
+        return true;
+    }
+
+    public function isOwner(Bike $bike): bool
+    {
+        return $bike->user_id === $this->id;
     }
 }

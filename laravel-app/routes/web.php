@@ -72,9 +72,9 @@ Route::post('contact', [ContactController::class, 'send'])
 Route::prefix('admin')
     ->middleware('auth', 'is_admin')
     ->group(function() {
-        Route::get('admin/dashboard', [AdminController::class, 'index'])
+        Route::get('/dashboard', [AdminController::class, 'index'])
             ->name('admin.dashboard');
-        Route::get('admin/settings', [AdminController::class, 'settings'])
+        Route::get('/settings', [AdminController::class, 'settings'])
             ->name('admin.settings');
         Route::get('deletedbikes', [AdminController::class, 'deletedBikes'])
             ->name('admin.deleted.bikes');
@@ -82,8 +82,14 @@ Route::prefix('admin')
             ->name('admin.user.details');
         Route::get('admin/users', [AdminController::class, 'usersList'])
             ->name('admin.users');
-        Route::get('admin/users/search', [AdminController::class, 'usersList'])
+        Route::get('/users/search', [AdminController::class, 'usersList'])
             ->name('admin.users.search');
+        Route::put('/user/{user}/block', [AdminController::class, 'userBlock'])
+            ->name('admin.user.block');
+        Route::put('user/{user}/addrole', [AdminController::class, 'userAddRole'])
+            ->name('admin.user.add.role');
+        Route::put('user/{user}/deleterole', [AdminController::class, 'userDeleteRole'])
+            ->name('admin.user.delete.role');
     });
 
 /**

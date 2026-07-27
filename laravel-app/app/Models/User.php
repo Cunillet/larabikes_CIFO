@@ -182,7 +182,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
     public function isOwner(Bike $bike): bool

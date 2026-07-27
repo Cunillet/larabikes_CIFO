@@ -2,8 +2,18 @@
 @section('title', 'Profile')
 
 @section('breadcrumbs-items')
-<li class="breadcrumb-item active">
-    Profile
+<li class="breadcrumb-item">
+    <a href="{{ route('admin.dashboard') }}">
+        Admin
+    </a>
+</li>
+<li class="breadcrumb-item">
+    <a href="{{ route('admin.users') }}">
+        Users List
+    </a>
+</li>
+<li class="breadcrumb-item">
+        User Details
 </li>
 @endsection
 
@@ -12,7 +22,7 @@
     <section class="p-4 rounded shadow-sm bg-light text-muted">
         <div class="row g-4 align-items-center">
             <h1 class="display-4 fw-bold mb-3">
-                <span class="fw-bold text-black">My Profile: </span>
+                <span class="fw-bold text-black">PROFILE: </span>
             </h1>
             
             <div class="col-12 col-lg-7">
@@ -80,14 +90,39 @@
                                 {{ $user->bikes->count() }}
                             </div>
                         </div>
-
-                        <div class="text-center mt-4">
-                            <a href="{{ route('profile.edit') }}" class="btn btn-primary">
-                                <i class="fas fa-edit me-2"></i>Edit Profile
-                            </a>
-                            <a href="{{ route('bikes.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-motorcycle me-2"></i>My Bikes
-                            </a>
+                        <div class="row mb-3">
+                            <div class="col-4 fw-bold">Roles:</div>
+                            <div class="col-8">
+                                <ul>
+                                    @forelse ($user->roles as $role)
+                                        <form action="{{ route('admin.user.delete.role', $user->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="role" value="{{ $role->id }}">
+                                            <button
+                                                type="submit"
+                                                class="btn btn-secondary">
+                                                {{ $role->role }}
+                                            </button>
+                                        </form>
+                                    @empty
+                                        <li class="btn btn-danger">NO ROLES</li>
+                                    @endforelse
+                                </ul>
+                            </div>
+                            <div class="col-4 fw-bold">Add Role:</div>
+                            <div class="col-8">
+                                <form action="{{ route('admin.user.add.role', $user->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <select name="role" id="role">
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->id }}">{{ $role->role }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button class="btn btn-success" type="submit">Add Role</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,74 +137,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="my-4 p-4 rounded shadow-sm bg-light text-muted">
-        <h2 class="display-5 fw-bold mb-3">
-            <span class="fw-bold text-black">My Bikes</span>
-        </h2>
-        <div class="container grid-stripped">
-            <div class="row h4 fw-bold p-2">
-                <div class="col">
-                    Brand
-                </div>
-                <div class="col">
-                    Model
-                </div>
-                <div class="col">
-                    Kms
-                </div>
-                <div class="col">
-                    Price
-                </div>
-                <div class="col">
-                    Registered
-                </div>
-                <div class="col">
-                    Actions
-                </div>
-            </div>
-            @if($user->bikes()->count() > 0)
-                @foreach($user->bikes as $bike)
-                <div class="row p-2">
-                    <div class="col">
-                        <a class="d/block text-muted text-decoration-none" href="{{ route('bikes.show', $bike->id) }}">
-                            {{ $bike->brand }}
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="d/block text-muted text-decoration-none" href="{{ route('bikes.show', $bike->id) }}">
-                            {{ $bike->model }}
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="d/block text-muted text-decoration-none" href="{{ route('bikes.show', $bike->id) }}">
-                            {{ $bike->kms }}
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="d/block text-muted text-decoration-none" href="{{ route('bikes.show', $bike->id) }}">
-                            {{ $bike->price }}
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="d/block text-muted text-decoration-none" href="{{ route('bikes.show', $bike->id) }}">
-                            {{$bike->registered ? 'Yes' : 'No' }}
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="text-danger text-decoration-none" href="{{ route('bikes.delete', $bike->id) }}">
-                            <i class="bi bi-trash3-fill"></i>
-                        </a>
-                        <a class="text-primary text-decoration-none ms-3" href="{{ route('bikes.edit', $bike->id) }}">
-                            <i class="bi bi-pen-fill"></i>
-                        </a>
-                    </div>
-                </div>
-                @endforeach
-            @else
-            <div class="row text-center">No Bikes found</div>
-            @endif
         </div>
     </section>
     <a class="btn btn-secondary btn-lg m-4" href="{{ route('welcome') }}">Back</a>

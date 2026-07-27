@@ -76,18 +76,34 @@
                         </a>
                     </div>
                     <div class="col">
-                        {{-- <a class="text-danger text-decoration-none" href="{{ route('admin.delete', $bike->id) }}">
-                            <i class="bi bi-trash3-fill"></i>
-                        </a>
-                        <a class="text-primary text-decoration-none ms-3" href="{{ route('bikes.edit', $bike->id) }}">
+                        <form
+                            class="text-danger text-decoration-none"
+                            action="{{ route('admin.user.block', $user->id) }}"
+                            method="POST">
+                            @method('PUT')
+                            @csrf
+                            <button
+                                class="text-decoration-none"
+                                type="submit"
+                                @if ($user->hasRole('blocked'))
+                                    disabled="disabled"
+                                @endif
+                                >
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </form>
+                        <a class="text-primary text-decoration-none ms-3" href="{{ route('admin.user.details', $user->id) }}">
                             <i class="bi bi-pen-fill"></i>
-                        </a> --}}
+                        </a>
                     </div>
                 </div>
                 @endforeach
             @else
             <div class="row text-center">No Users found</div>
             @endif
+            <div class="row justify-content-between mt-3">
+                <div>{{ $users->links() }}</div>
+            </div>
         </div>
     </section>
 </main>

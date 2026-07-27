@@ -12,7 +12,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasRole(['admin']);
     }
 
     /**
@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function manage(User $user): bool
     {
-        return $user->id == Auth::user()->id;
+        return $user->id == Auth::user()->id || $user->hasRole(['admin']);
     }
 
     /**
@@ -44,7 +44,7 @@ class UserPolicy
      */
     public function update(User $user): bool
     {
-        return $user->id == Auth::user()->id;
+        return $user->id == Auth::user()->id || $user->hasRole(['admin']);
     }
 
     /**
@@ -53,21 +53,5 @@ class UserPolicy
     public function delete(User $user): bool
     {
         return $user->id == Auth::user()->id || $user->hasRole(['admin']);
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Bike $bike): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Bike $bike): bool
-    {
-        return $user->id == $bike->user_id || $user->hasRole(['admin']);
     }
 }

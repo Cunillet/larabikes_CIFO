@@ -63,7 +63,7 @@ class BikeApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'status' => 'error',
+            'status' => 'success',
             'data' => $bike,
             'message' => 'Bike created successfully'
         ], 201);

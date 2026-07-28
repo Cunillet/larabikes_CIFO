@@ -1,0 +1,103 @@
+
+================================================================================
+  PETICIONES CURL - API LARABIKES
+  Base URL: http://localhost:8080/api
+================================================================================
+
+  1. LISTAR TODAS LAS MOTOS (con soft-deleted)
+     GET /api/bikes
+  --------------------------------------------------------------------------------
+  curl -s http://localhost:8080/api/bikes | jq .
+
+  Con paginación:
+  curl -s "http://localhost:8080/api/bikes?page=2" | jq .
+
+
+  2. OBTENER UNA MOTO POR ID
+     GET /api/bikes/{id}
+  --------------------------------------------------------------------------------
+  curl -s http://localhost:8080/api/bikes/1 | jq .
+
+
+  3. CREAR UNA NUEVA MOTO
+     POST /api/bikes
+  --------------------------------------------------------------------------------
+  curl -s -X POST http://localhost:8080/api/bikes \
+    -H "Content-Type: application/json" \
+    -d '{
+      "brand": "Honda",
+      "model": "CBR 600RR",
+      "year": 2023,
+      "price": 12500.00,
+      "description": "Deportiva de 600cc"
+    }' | jq .
+
+  Con imagen (multipart):
+  curl -s -X POST http://localhost:8080/api/bikes \
+    -F "brand=Honda" \
+    -F "model=CBR 600RR" \
+    -F "year=2023" \
+    -F "price=12500.00" \
+    -F "description=Deportiva de 600cc" \
+    -F "image=@/ruta/a/imagen.jpg" | jq .
+
+
+  4. ACTUALIZAR UNA MOTO
+     PUT /api/bikes/{id}
+  --------------------------------------------------------------------------------
+  curl -s -X PUT http://localhost:8080/api/bikes/1 \
+    -H "Content-Type: application/json" \
+    -d '{
+      "price": 11500.00,
+      "description": "Precio actualizado"
+    }' | jq .
+
+  Con imagen:
+  curl -s -X PUT http://localhost:8080/api/bikes/1 \
+    -F "price=11500.00" \
+    -F "image=@/ruta/nueva-imagen.jpg" | jq .
+
+
+  5. ELIMINAR UNA MOTO (soft delete)
+     DELETE /api/bikes/{id}
+  --------------------------------------------------------------------------------
+  curl -s -X DELETE http://localhost:8080/api/bikes/1 | jq .
+
+
+  6. BUSCAR MOTOS POR MARCA Y/O MODELO
+     GET /api/bikes/search?brand={brand}&model={model}
+  --------------------------------------------------------------------------------
+  Por marca:
+  curl -s "http://localhost:8080/api/bikes/search?brand=Yamaha" | jq .
+
+  Por modelo:
+  curl -s "http://localhost:8080/api/bikes/search?model=CBR" | jq .
+
+  Por ambos:
+  curl -s "http://localhost:8080/api/bikes/search?brand=Honda&model=CBR" | jq .
+
+
+  7. RESTAURAR UNA MOTO ELIMINADA
+     POST /api/bikes/{id}/restore
+  --------------------------------------------------------------------------------
+  curl -s -X POST http://localhost:8080/api/bikes/1/restore | jq .
+
+
+  8. ELIMINAR UNA MOTO PERMANENTEMENTE
+     DELETE /api/bikes/{id}/force
+  --------------------------------------------------------------------------------
+  curl -s -X DELETE http://localhost:8080/api/bikes/1/force | jq .
+
+
+  9. LISTAR TODAS LAS MOTOS (incluyendo eliminadas)
+     GET /api/bikes (ya incluye withTrashed)
+  --------------------------------------------------------------------------------
+  curl -s http://localhost:8080/api/bikes | jq '.data.data | length'
+
+
+  NOTAS:
+  - jq es opcional (formatea JSON). Sin jq se ve el JSON plano.
+  - La API NO requiere autenticación (sin middleware auth).
+  - Las respuestas incluyen: success (bool), status (string), data, message.
+  - La paginación devuelve: current_page, data[], last_page, per_page, total, etc.
+  - El formato del error es: { success: false, status: "error", errors: {...} }

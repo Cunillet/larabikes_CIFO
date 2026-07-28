@@ -1,103 +1,206 @@
 
-================================================================================
-  PETICIONES CURL - API LARABIKES
-  Base URL: http://localhost:8080/api
-================================================================================
-
-  1. LISTAR TODAS LAS MOTOS (con soft-deleted)
-     GET /api/bikes
-  --------------------------------------------------------------------------------
-  curl -s http://localhost:8080/api/bikes | jq .
-
-  Con paginación:
-  curl -s "http://localhost:8080/api/bikes?page=2" | jq .
+===============================================================================
+  PETICIONES CURL - API LARABIKES (AUTH TESTS VERIFIED ?)
+  Base URL: http://localhost:8080
+===============================================================================
 
 
-  2. OBTENER UNA MOTO POR ID
-     GET /api/bikes/{id}
-  --------------------------------------------------------------------------------
-  curl -s http://localhost:8080/api/bikes/1 | jq .
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  API - AUTENTICATION (Sanctum)
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+*** TEST 1: REGISTER ? ? 200 + token ***
+POST /api/register
+--------------------------------------------------------------------------------
+curl -s -X POST http://localhost:8080/api/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"API Tester","email":"api@test.com","password":"Test1234","password_confirmation":"Test1234","birth_date":"1995-06-20"}' | jq .
+
+Response: {"success":true,"status":"success","data":{"user":{"id":1,...},"token":"1|abc...","token_type":"Bearer"}}
+HTTP_CODE: 201
 
 
-  3. CREAR UNA NUEVA MOTO
-     POST /api/bikes
-  --------------------------------------------------------------------------------
-  curl -s -X POST http://localhost:8080/api/bikes \
-    -H "Content-Type: application/json" \
-    -d '{
-      "brand": "Honda",
-      "model": "CBR 600RR",
-      "year": 2023,
-      "price": 12500.00,
-      "description": "Deportiva de 600cc"
-    }' | jq .
+*** TEST 2: LOGIN ? ? 200 + new token ***
+POST /api/login
+--------------------------------------------------------------------------------
+curl -s -X POST http://localhost:8080/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"api@tester.com","password":"testpass123"}' | jq .
 
-  Con imagen (multipart):
-  curl -s -X POST http://localhost:8080/api/bikes \
-    -F "brand=Honda" \
-    -F "model=CBR 600RR" \
-    -F "year=2023" \
-    -F "price=12500.00" \
-    -F "description=Deportiva de 600cc" \
-    -F "image=@/ruta/a/imagen.jpg" | jq .
+Response: {"success":true,"status":"success","data":{"user":{...},"token":"2|def...","token_type":"Bearer"}}
+HTTP_CODE: 200
+NOTA: Save token.
 
 
-  4. ACTUALIZAR UNA MOTO
-     PUT /api/bikes/{id}
-  --------------------------------------------------------------------------------
-  curl -s -X PUT http://localhost:8080/api/bikes/1 \
-    -H "Content-Type: application/json" \
-    -d '{
-      "price": 11500.00,
-      "description": "Precio actualizado"
-    }' | jq .
+*** TEST 3: AUTHENTICATED PROFILE ? ? 200 ***
+GET /api/user
+--------------------------------------------------------------------------------
+curl -s http://localhost:8080/api/user \
+  -H "Authorization: Bearer ******" | jq .
 
-  Con imagen:
-  curl -s -X PUT http://localhost:8080/api/bikes/1 \
-    -F "price=11500.00" \
-    -F "image=@/ruta/nueva-imagen.jpg" | jq .
+Response: {"success":true,"status":"success","data":{"id":1,"name":"API Tester","email":"api@tester.com","birth_date":"20/06/1995"}}
+HTTP_CODE: 200
 
 
-  5. ELIMINAR UNA MOTO (soft delete)
-     DELETE /api/bikes/{id}
-  --------------------------------------------------------------------------------
-  curl -s -X DELETE http://localhost:8080/api/bikes/1 | jq .
+*** TEST 4: NO AUTH PROFILE ? ? 401 ***
+GET /api/user (sin token)
+--------------------------------------------------------------------------------
+curl -s http://localhost:8080/api/user | jq .
+
+Response: {"message":"Unauthenticated."}
+HTTP_CODE: 401
 
 
-  6. BUSCAR MOTOS POR MARCA Y/O MODELO
-     GET /api/bikes/search?brand={brand}&model={model}
-  --------------------------------------------------------------------------------
-  Por marca:
-  curl -s "http://localhost:8080/api/bikes/search?brand=Yamaha" | jq .
+*** TEST 5: LOGOUT ? ? 200 ***
+POST /api/logout
+--------------------------------------------------------------------------------
+curl -s -X POST http://localhost:8080/api/logout \
+  -H "Authorization: Bearer ******" | jq .
 
-  Por modelo:
-  curl -s "http://localhost:8080/api/bikes/search?model=CBR" | jq .
-
-  Por ambos:
-  curl -s "http://localhost:8080/api/bikes/search?brand=Honda&model=CBR" | jq .
+Response: {"success":true,"status":"success","message":"Logged out successfully"}
+HTTP_CODE: 200
 
 
-  7. RESTAURAR UNA MOTO ELIMINADA
-     POST /api/bikes/{id}/restore
-  --------------------------------------------------------------------------------
-  curl -s -X POST http://localhost:8080/api/bikes/1/restore | jq .
+*** TEST 6: REVOQUED TOKEN AFTER LOGOUT ? ? 401 ***
+GET /api/user
+--------------------------------------------------------------------------------
+curl -s http://localhost:8080/api/user \
+  -H "Authorization: Bearer ******"
+
+Response: {"message":"Unauthenticated."}
+HTTP_CODE: 401
 
 
-  8. ELIMINAR UNA MOTO PERMANENTEMENTE
-     DELETE /api/bikes/{id}/force
-  --------------------------------------------------------------------------------
-  curl -s -X DELETE http://localhost:8080/api/bikes/1/force | jq .
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  API - BIKES (public: GET, search  |  protected: POST, PUT, DELETE)
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+*** TEST 7: LIST BIKES ? ? 200 ***
+GET /api/bikes
+--------------------------------------------------------------------------------
+curl -s http://localhost:8080/api/bikes | jq .
+
+curl -s "http://localhost:8080/api/bikes?page=2&per_page=5" | jq .
 
 
-  9. LISTAR TODAS LAS MOTOS (incluyendo eliminadas)
-     GET /api/bikes (ya incluye withTrashed)
-  --------------------------------------------------------------------------------
-  curl -s http://localhost:8080/api/bikes | jq '.data.data | length'
+*** TEST 8: GET BIKE BY ID ? ? 200 ***
+GET /api/bikes/{id}
+--------------------------------------------------------------------------------
+curl -s http://localhost:8080/api/bikes/1 | jq .
 
 
-  NOTAS:
-  - jq es opcional (formatea JSON). Sin jq se ve el JSON plano.
-  - La API NO requiere autenticación (sin middleware auth).
-  - Las respuestas incluyen: success (bool), status (string), data, message.
-  - La paginación devuelve: current_page, data[], last_page, per_page, total, etc.
-  - El formato del error es: { success: false, status: "error", errors: {...} }
+*** TEST 9: SEARCH BIKE ? ? 200 ***
+GET /api/bikes/search?q={query}
+--------------------------------------------------------------------------------
+curl -s "http://localhost:8080/api/bikes/search?q=KAWASAKI" | jq .
+
+curl -s "http://localhost:8080/api/bikes/search?brand=Yamaha" | jq .
+
+
+*** TEST 10: CREATE BIKE WITHOUT AUTH ? ? 401 ***
+POST /api/bikes (sin token)
+--------------------------------------------------------------------------------
+curl -s -X POST http://localhost:8080/api/bikes \
+  -H "Content-Type: application/json" \
+  -d '{"brand":"Honda","model":"CBR 600RR","price":12500}' | jq .
+
+Response: {"message":"Unauthenticated."}
+HTTP_CODE: 401
+
+
+*** TEST 11: CREATE BIKE AUTHENTICATED ? ? 201 + user_id ***
+POST /api/bikes (con token)
+--------------------------------------------------------------------------------
+curl -s -X POST http://localhost:8080/api/bikes \
+  -H "Authorization: Bearer ******" \
+  -H "Content-Type: application/json" \
+  -d '{"brand":"API Brand","model":"Test Model","price":15000,"engine":"4 tiempos","power":"100cv","weight":200,"description":"Creada via API"}' | jq .
+
+Response: {"success":true,"status":"success","data":{"user_id":54,...},"message":"Bike created successfully"}
+HTTP_CODE: 201
+
+
+*** TEST 12: REQUIRED FIELDS ? ? 422 ***
+POST /api/bikes (invalid data)
+--------------------------------------------------------------------------------
+curl -s -X POST http://localhost:8080/api/bikes \
+  -H "Authorization: Bearer ******" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test","engine":"2t"}' | jq .
+
+Response: {"success":false,"status":"error","errors":{"brand":["The brand field is required."],...}}
+HTTP_CODE: 422
+
+
+*** TEST 13: UPDATE BIKE OWNER ? ? 200 ***
+PUT /api/bikes/{id} (owner)
+--------------------------------------------------------------------------------
+curl -s -X PUT http://localhost:8080/api/bikes/202 \
+  -H "Authorization: Bearer ******" \
+  -H "Content-Type: application/json" \
+  -d '{"brand":"Brand Updated","model":"Model Updated","price":18000}' | jq .
+
+Response: {"success":true,"status":"success","data":{"id":202,...},"message":"Bike updated successfully"}
+HTTP_CODE: 200
+
+
+*** TEST 14: DELETE NOT OWNED BIKE ? ? 403 ***
+DELETE /api/bikes/{id} (not owner)
+--------------------------------------------------------------------------------
+curl -s -X DELETE http://localhost:8080/api/bikes/1 \
+  -H "Authorization: Bearer ******" | jq .
+
+Response: {"success":false,"status":"error","message":"You are not authorized to delete this bike"}
+HTTP_CODE: 403
+
+
+*** TEST 15: DELETE OWNED BIKE ? ? 200 ***
+DELETE /api/bikes/{id} (owner)
+--------------------------------------------------------------------------------
+curl -s -X DELETE http://localhost:8080/api/bikes/202 \
+  -H "Authorization: Bearer ******" | jq .
+
+Resposne: {"success":true,"status":"success","message":"Bike deleted successfully"}
+HTTP_CODE: 200
+
+
+*** TEST 16: RESTORE BIKE (admin only) ***
+POST /api/bikes/{id}/restore
+--------------------------------------------------------------------------------
+curl -s -X POST http://localhost:8080/api/bikes/202/restore \
+  -H "Authorization: Bearer ******" | jq .
+
+
+*** TEST 17: PURGE BIKE (admin only) ***
+DELETE /api/bikes/{id}/force
+--------------------------------------------------------------------------------
+curl -s -X DELETE http://localhost:8080/api/bikes/202/force \
+  -H "Authorization: Bearer ******" | jq .
+
+
+===============================================================================
+  WEB - PUBLIC ROUTES
+===============================================================================
+
+curl -s http://localhost:8080/
+curl -s http://localhost:8080/motos
+curl -s http://localhost:8080/motos/1
+curl -s "http://localhost:8080/motos/search/Yamaha"
+
+
+===============================================================================
+  IMPORTANT NOTES
+===============================================================================
+
+- jq es opcional (formatea JSON). Sin jq se ve el JSON plano.
+- Las rutas protegidas requieren header: Authorization: Bearer <token>
+- El token se obtiene de POST /api/register o POST /api/login
+- Respuestas API: { success, status, data?, message?, errors? }
+- Errores comunes:
+    401 ? No autenticado (token faltante o inv?lido)
+    403 ? No autorizado (no eres owner/admin)
+    404 ? Recurso no encontrado
+    422 ? Error de validaci?n
+- Campos obligatorios al crear bike: brand, model, price
+- Al registrarse: name, email, password, password_confirmation
+- user_id se asigna automaticamente al crear si estas autenticado

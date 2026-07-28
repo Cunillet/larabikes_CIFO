@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bike;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,12 +30,11 @@ class BikeApiController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'brand' => 'required|string|max:255',
             'model' => 'required|string|max:255',
-            'year' => 'nullable|integer|min:1900|max:' . date('Y'),
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -48,9 +49,9 @@ class BikeApiController extends Controller
         }
 
         $bike = new Bike();
+        $bike->user_id = auth()->id();
         $bike->brand = $request->brand;
         $bike->model = $request->model;
-        $bike->year = $request->year;
         $bike->price = $request->price;
         $bike->description = $request->description;
 
@@ -95,10 +96,10 @@ class BikeApiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $bike = Bike::withTrashed()->find($id);
-        
+
         if (!$bike) {
             return response()->json([
                 'success' => false,
@@ -107,10 +108,17 @@ class BikeApiController extends Controller
             ], 404);
         }
 
+        if (Gate::denies('update', $bike)) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'You are not authorized to update this bike'
+            ], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'brand' => 'sometimes|string|max:255',
             'model' => 'sometimes|string|max:255',
-            'year' => 'nullable|integer|min:1900|max:' . date('Y'),
             'price' => 'sometimes|numeric|min:0',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -126,7 +134,6 @@ class BikeApiController extends Controller
 
         if ($request->has('brand')) $bike->brand = $request->brand;
         if ($request->has('model')) $bike->model = $request->model;
-        if ($request->has('year')) $bike->year = $request->year;
         if ($request->has('price')) $bike->price = $request->price;
         if ($request->has('description')) $bike->description = $request->description;
 
@@ -152,16 +159,24 @@ class BikeApiController extends Controller
     /**
      * Remove the specified resource from storage (soft delete).
      */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $bike = Bike::find($id);
-        
+
         if (!$bike) {
             return response()->json([
                 'success' => false,
                 'status' => 'error',
                 'message' => 'Bike not found or already deleted'
             ], 404);
+        }
+
+        if (Gate::denies('delete', $bike)) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'You are not authorized to delete this bike'
+            ], 403);
         }
 
         $bike->delete();
@@ -176,8 +191,18 @@ class BikeApiController extends Controller
     /**
      * Restore a soft-deleted bike.
      */
-    public function restore($id)
+    public function restore($id): JsonResponse
     {
+        $user = auth()->user();
+
+        if (! $user || ! $user->hasRole('admin')) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'Only administrators can restore bikes'
+            ], 403);
+        }
+
         $bike = Bike::onlyTrashed()->find($id);
         
         if (!$bike) {
@@ -201,8 +226,18 @@ class BikeApiController extends Controller
     /**
      * Permanently delete a bike.
      */
-    public function forceDelete($id)
+    public function forceDelete($id): JsonResponse
     {
+        $user = auth()->user();
+
+        if (! $user || ! $user->hasRole('admin')) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'Only administrators can permanently delete bikes'
+            ], 403);
+        }
+
         $bike = Bike::withTrashed()->find($id);
         
         if (!$bike) {

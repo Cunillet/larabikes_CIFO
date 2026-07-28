@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Circuit;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bike extends Model
@@ -57,5 +59,15 @@ class Bike extends Model
      */
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The circuits this bike has lap times for.
+     */
+    public function circuits(): BelongsToMany
+    {
+        return $this->belongsToMany(Circuit::class)
+            ->withPivot('lap_time', 'record_date')
+            ->withTimestamps();
     }
 }

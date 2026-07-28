@@ -34,7 +34,7 @@ class UserController extends Controller
     }
 
     public function confirmEmail(Request $request) {
-        $request->user()->sendEmailVerificationNotification(); // <-- Se llama aquí
-        return back()->with('message', '¡Enlace de verificación reenviado!');
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('success', '¡Enlace de verificación reenviado!');
     }
 }

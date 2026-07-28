@@ -78,9 +78,11 @@ class BikeController extends Controller {
      * Display the specified resource.
      */
     public function show(string $id) {
-        $bike = Bike::findOrFail($id);
+        $bike = Bike::with('circuits')->findOrFail($id);
+        $allCircuits = \App\Models\Circuit::orderBy('name')->get();
         return view('bikes.show', [
-            'bike' => $bike
+            'bike' => $bike,
+            'allCircuits' => $allCircuits,
         ]);
     }
 

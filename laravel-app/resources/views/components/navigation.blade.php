@@ -30,6 +30,11 @@
                             </a>
                         </li>
                         <li>
+                            <a class="dropdown-item" href="{{ route('admin.circuits.index') }}">
+                                <i class="bi bi-map me-2"></i>Circuits
+                            </a>
+                        </li>
+                        <li>
                             <a class="dropdown-item" href="{{ route('admin.deleted.bikes') }}">
                                 <i class="bi bi-trash me-2"></i>Deleted Bikes
                             </a>

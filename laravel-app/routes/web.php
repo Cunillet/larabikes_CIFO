@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BikeCircuitController;
 use App\Http\Controllers\BikeController;
+use App\Http\Controllers\CircuitController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TermsController;
@@ -25,6 +27,12 @@ Route::delete('motos/{bike}/image', [BikeController::class, 'destroyImage'])
     ->name('bikes.destroyImage');
 Route::get('/motos/{bike}/delete', [BikeController::class, 'delete'])
     ->name('bikes.delete')->middleware(['checkage:15', 'throttle:3,1']);
+Route::post('motos/{bike}/circuits', [BikeCircuitController::class, 'store'])
+    ->name('bikes.circuits.store');
+Route::put('motos/{bike}/circuits/{circuit}', [BikeCircuitController::class, 'update'])
+    ->name('bikes.circuits.update');
+Route::delete('motos/{bike}/circuits/{circuit}', [BikeCircuitController::class, 'destroy'])
+    ->name('bikes.circuits.destroy');
 Route::delete('motos/purge', [BikeController::class, 'purge'])
     ->name('bikes.purge');
 Route::put('motos/restore', [BikeController::class, 'restore'])
@@ -90,6 +98,22 @@ Route::prefix('admin')
             ->name('admin.user.add.role');
         Route::put('user/{user}/deleterole', [AdminController::class, 'userDeleteRole'])
             ->name('admin.user.delete.role');
+
+        /** CIRCUITS CRUD */
+        Route::resource('circuits', CircuitController::class)
+            ->names([
+                'index' => 'admin.circuits.index',
+                'create' => 'admin.circuits.create',
+                'store' => 'admin.circuits.store',
+                'show' => 'admin.circuits.show',
+                'edit' => 'admin.circuits.edit',
+                'update' => 'admin.circuits.update',
+                'destroy' => 'admin.circuits.destroy',
+            ]);
+        Route::get('circuits/{circuit}/delete', [CircuitController::class, 'delete'])
+            ->name('admin.circuits.delete');
+        Route::delete('circuits/{circuit}/image', [CircuitController::class, 'destroyImage'])
+            ->name('admin.circuits.destroyImage');
     });
 
 /**

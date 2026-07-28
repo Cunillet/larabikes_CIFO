@@ -15,6 +15,28 @@ class AdminController extends Controller
         $this->pagination = config('pagination.bikes', 15);
     }
 
+    public function index()
+    {
+        $totalUsers = User::count();
+        $totalBikes = Bike::withTrashed()->count();
+        $totalCircuits = \App\Models\Circuit::count();
+        $deletedBikes = Bike::onlyTrashed()->count();
+        $recentUsers = User::orderBy('created_at', 'DESC')->limit(5)->get();
+
+        return view('admin.dashboard', [
+            'totalUsers' => $totalUsers,
+            'totalBikes' => $totalBikes,
+            'totalCircuits' => $totalCircuits,
+            'deletedBikes' => $deletedBikes,
+            'recentUsers' => $recentUsers,
+        ]);
+    }
+
+    public function settings()
+    {
+        return view('admin.settings');
+    }
+
     public function deletedBikes(Request $request) {
         $bikes = Bike::onlyTrashed()->get();
         return view('admin.deletedbikes', ['bikes' => $bikes]);

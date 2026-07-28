@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Mail;
+
+use App\Models\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class NewUserNotification extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function build()
+    {
+        return $this->subject('Nuevo usuario registrado')
+                    ->markdown('emails.new-user-notification')
+                    ->with([
+                        'userName' => $this->user->name,
+                        'userEmail' => $this->user->email,
+                        'registeredAt' => $this->user->created_at->format('d/m/Y H:i')
+                    ]);
+    }
+}

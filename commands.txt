@@ -172,9 +172,35 @@ composer require laravel/fortify
 php artisan fortify:install
 php artisan migrate
 
+#######
+# API #
+#######
+# create new bike
+curl -X POST http://localhost:8000/api/bikes \
+  -H "Content-Type: multipart/form-data" \
+  -F "brand=Yamaha" \
+  -F "model=MT-07" \
+  -F "year=2023" \
+  -F "price=7500" \
+  -F "description=Awesome bike" \
+  -F "image=@/path/to/image.jpg"
 
+# bikes list
+curl http://localhost:8000/api/bikes
 
+# bikes search
+curl "http://localhost:8000/api/bikes/search?brand=Yamaha&model=MT"
 
+# bikes update
+curl -X PUT http://localhost:8000/api/bikes/1 \
+  -H "Content-Type: application/json" \
+  -d '{"price": 8000, "year": 2024}'
+
+# bikes delete
+curl -X DELETE http://localhost:8000/api/bikes/1
+
+# bikes force delete
+curl -X DELETE http://localhost:8000/api/bikes/1/force
 
 
 

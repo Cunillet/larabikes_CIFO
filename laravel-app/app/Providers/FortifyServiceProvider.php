@@ -8,8 +8,11 @@ use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Responses\LoginResponse as ProfileLoginResponse;
 use App\Http\Responses\RegisterResponse as ProfileRegisterResponse;
+use App\Listeners\HandleUserRegistration;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -91,5 +94,10 @@ class FortifyServiceProvider extends ServiceProvider
                 ($credentialId ?: $request->session()->getId()).'|'.$request->ip()
             );
         });
+
+        Event::listen(
+            Registered::class,
+            HandleUserRegistration::class
+        );
     }
 }

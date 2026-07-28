@@ -36,6 +36,11 @@
     @env(['local', 'dev'])
         <x-envWarning mode="{{ env('APP_ENV') }}"/>
     @endenv
+    @if (auth()->user()?->hasRole('blocked'))
+        <x-alert type="danger" msg="Warning: ">
+            User blocked, your actions are restricted.
+        </x-alert>
+    @endif
     @if (Session::has('success') || session('status') || !empty($message))
         <x-alert type="success" msg="Success: ">
             {{ Session::get('success') }}

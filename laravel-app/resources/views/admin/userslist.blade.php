@@ -76,22 +76,6 @@
                         </a>
                     </div>
                     <div class="col">
-                        <form
-                            class="text-danger text-decoration-none"
-                            action="{{ route('admin.user.block', $user->id) }}"
-                            method="POST">
-                            @method('PUT')
-                            @csrf
-                            <button
-                                class="text-decoration-none"
-                                type="submit"
-                                @if ($user->hasRole('blocked'))
-                                    disabled="disabled"
-                                @endif
-                                >
-                                <i class="bi bi-trash3-fill"></i>
-                            </button>
-                        </form>
                         <a class="text-primary text-decoration-none ms-3" href="{{ route('admin.user.details', $user->id) }}">
                             <i class="bi bi-pen-fill"></i>
                         </a>

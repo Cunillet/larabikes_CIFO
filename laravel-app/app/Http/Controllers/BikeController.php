@@ -94,8 +94,10 @@ class BikeController extends Controller {
         if (Gate::denies('update', $bike)) {
             abort(403, 'You do not have enough privileges to do this operation.');
         }
+        $allCircuits = \App\Models\Circuit::orderBy('name')->get();
         return view('bikes.edit', [
-            'bike' => $bike
+            'bike' => $bike,
+            'allCircuits' => $allCircuits,
         ]);
     }
 

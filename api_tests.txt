@@ -14,7 +14,7 @@ POST /api/register
 --------------------------------------------------------------------------------
 curl -s -X POST http://localhost:8080/api/register \
   -H "Content-Type: application/json" \
-  -d '{"name":"API Tester","email":"api@test.com","password":"Test1234","password_confirmation":"Test1234","birth_date":"1995-06-20"}' | jq .
+  -d '{"name":"API Test","email":"api@test.com","password":"Test1234","password_confirmation":"Test1234","birth_date":"1995-06-20"}' | jq .
 
 Response: {"success":true,"status":"success","data":{"user":{"id":1,...},"token":"1|abc...","token_type":"Bearer"}}
 HTTP_CODE: 201
@@ -25,7 +25,7 @@ POST /api/login
 --------------------------------------------------------------------------------
 curl -s -X POST http://localhost:8080/api/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"api@tester.com","password":"testpass123"}' | jq .
+  -d '{"email":"api@test.com","password":"Test1234"}' | jq .
 
 Response: {"success":true,"status":"success","data":{"user":{...},"token":"2|def...","token_type":"Bearer"}}
 HTTP_CODE: 200
@@ -92,9 +92,9 @@ curl -s http://localhost:8080/api/bikes/1 | jq .
 *** TEST 9: SEARCH BIKE ? ? 200 ***
 GET /api/bikes/search?q={query}
 --------------------------------------------------------------------------------
-curl -s "http://localhost:8080/api/bikes/search?q=KAWASAKI" | jq .
+curl -s "http://localhost:8080/api/bikes/search?q=Kawasaki" | jq .
 
-curl -s "http://localhost:8080/api/bikes/search?brand=Yamaha" | jq .
+curl -s "http://localhost:8080/api/bikes/search?brand=Honda" | jq .
 
 
 *** TEST 10: CREATE BIKE WITHOUT AUTH ? ? 401 ***
@@ -185,22 +185,21 @@ curl -s -X DELETE http://localhost:8080/api/bikes/202/force \
 curl -s http://localhost:8080/
 curl -s http://localhost:8080/motos
 curl -s http://localhost:8080/motos/1
-curl -s "http://localhost:8080/motos/search/Yamaha"
+curl -s "http://localhost:8080/motos/search/Honda"
 
 
 ===============================================================================
   IMPORTANT NOTES
 ===============================================================================
 
-- jq es opcional (formatea JSON). Sin jq se ve el JSON plano.
-- Las rutas protegidas requieren header: Authorization: Bearer <token>
-- El token se obtiene de POST /api/register o POST /api/login
-- Respuestas API: { success, status, data?, message?, errors? }
-- Errores comunes:
-    401 ? No autenticado (token faltante o inv?lido)
-    403 ? No autorizado (no eres owner/admin)
-    404 ? Recurso no encontrado
-    422 ? Error de validaci?n
-- Campos obligatorios al crear bike: brand, model, price
-- Al registrarse: name, email, password, password_confirmation
-- user_id se asigna automaticamente al crear si estas autenticado
+- jq is optional (JSON format output).
+- protected routes require header: Authorization: Bearer <token>
+- Token is obtained through POST /api/register or POST /api/login
+- API response: { success, status, data?, message, errors? }
+- common errors:
+    401 ? not authenticated (invalid token or required)
+    403 ? not authorized (not owner or admin role)
+    404 ? resource not found
+    422 ? validation error
+- required fields in order to create a bike: brand, model, price
+- required fields in oredr to register: name, email, password, password_confirmation

@@ -20,11 +20,8 @@
 </style>
 <main class="container content-with-fixed-footer">
     <section class="p-4 rounded shadow-sm bg-light text-muted">
-        @section('searchbar')
-        <x-searchbar />
-        @show
         <h1 class="display-4 fw-bold mb-3 d-flex justify-content-between align-items-center">
-            <span>Users List</span><a href="{{ route('bikes.create') }}" class="btn btn-success">+</a>
+            <span>Users List</span>
         </h1>
         <div class="container grid-stripped">
             <div class="row h4 fw-bold p-2">
